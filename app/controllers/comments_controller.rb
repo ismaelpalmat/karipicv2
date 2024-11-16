@@ -1,23 +1,20 @@
 class CommentsController < ApplicationController
 # app/controllers/comments_controller.rb
-class CommentsController < ApplicationController
   def create
-    @photo = Photo.find(params[:photo_id]) # Encuentra la foto relacionada
-    @comment = @photo.comments.build(comment_params) # Construye el comentario asociado a la foto
+    @photo = Photo.find(params[:photo_id])
+    @comment = @photo.comments.build(comment_params)
+    @comment.user = current_user # Cambia esto según cómo manejes usuarios
 
     if @comment.save
-      redirect_to @photo, notice: 'Comment was successfully added.' # Redirige a la foto
+      redirect_to @photo, notice: 'Comment added successfully.'
     else
-      flash[:alert] = 'Comment could not be saved.'
-      redirect_to @photo
+      redirect_to @photo, alert: 'Failed to add comment.'
     end
   end
 
   private
 
   def comment_params
-    params.require(:comment).permit(:content) # Asegúrate de permitir el campo content
+    params.require(:comment).permit(:content)
   end
-end
-
 end
